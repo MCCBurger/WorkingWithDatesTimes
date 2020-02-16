@@ -19,7 +19,9 @@ fun main() {
 
     //Create a list of all the full moons for the year using the approximate time between full moons.
     val listOfFullMoons = arrayListOf<LocalDateTime>()
+    //Add January to slot 0
     listOfFullMoons.add(FirstFullMoon)
+    //Add Feb to Dec to slots 1 - 12
     for (i in 0..11) {
         listOfFullMoons.add(listOfFullMoons.get(i).plusDays(29).plusHours(12).plusMinutes(44).plusSeconds(3))
     }
@@ -27,12 +29,28 @@ fun main() {
     for (x in listOfFullMoons)
         println(x.format(dateFormatter))
 
-    //Print previous and next full moon based on system month
+    //Print previous and next full moon based on system month but use correct month in list
+    //Account for last moon last year and first moon next year
     println("============= Last Full Moon From Today's Date ==================")
-    var currentMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
-    println("The last full moon was: ${listOfFullMoons[currentMonth - 1].format(dateFormatter)}")
+    var monthInList: Int = today.monthValue - 1
+
+    if (monthInList - 1 < 0)
+        println(
+            "The last full moon last year was: ${FirstFullMoon.minusDays(29).minusHours(12).minusMinutes(44).minusSeconds(
+                3
+            )}"
+        )
+    else
+        println("The last full moon was: ${listOfFullMoons[monthInList - 1].format(dateFormatter)}")
 
     println("============= Next Full Moon From Today's Date ==================")
-    println("The next full moon will be: ${listOfFullMoons[currentMonth + 1].format(dateFormatter)}")
+    if (monthInList + 1 > 12)
+        println(
+            "Next Years first full moon will be: ${listOfFullMoons.get(11).plusDays(29).plusHours(12).plusMinutes(44).plusSeconds(
+                3
+            )}"
+        )
+    else
+        println("The next full moon will be: ${listOfFullMoons[monthInList + 1].format(dateFormatter)}")
 
 }
